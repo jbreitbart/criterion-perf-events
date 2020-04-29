@@ -1,0 +1,15 @@
+[package]
+name = "criterion-perf-events"
+version = "0.1.0"
+authors = ["Jens Breitbart <jbreitbart@gmail.com>"]
+edition = "2018"
+description = "Measure perf events for criterion"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/jbreitbart/criterion-perf-events"
+
+
+exclude = [".gitignore", ".vscode/*", ".github/*"]
+
+[dependencies]
+criterion = "0.3"
+perfcnt = "0.5"
