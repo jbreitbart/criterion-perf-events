@@ -1,12 +1,12 @@
 [package]
 name = "criterion-perf-events"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Jens Breitbart <jbreitbart@gmail.com>"]
 edition = "2018"
 description = "Measure perf events for criterion"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/jbreitbart/criterion-perf-events"
-
+readme = "README.md"
 
 exclude = [".gitignore", ".vscode/*", ".github/*"]
 
