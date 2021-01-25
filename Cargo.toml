@@ -1,6 +1,6 @@
 [package]
 name = "criterion-perf-events"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Jens Breitbart <jbreitbart@gmail.com>"]
 edition = "2018"
 description = "Measure perf events for criterion"
@@ -11,5 +11,5 @@ readme = "README.md"
 exclude = [".gitignore", ".vscode/*", ".github/*"]
 
 [dependencies]
-criterion = "0.3.2"
+criterion = "0.3.4"
 perfcnt = "0.6.0"
