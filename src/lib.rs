@@ -124,13 +124,28 @@ struct PerfFormatter;
 
 impl ValueFormatter for PerfFormatter {
     fn format_value(&self, value: f64) -> String {
-        format!("{:.4} cycles", value)
+        format!("{value:.4} cycles")
     }
 
     fn format_throughput(&self, throughput: &Throughput, value: f64) -> String {
         match throughput {
-            Throughput::Bytes(b) => format!("{:.4} events/byte", value / *b as f64),
-            Throughput::Elements(b) => format!("{:.4} events/element", value / *b as f64),
+            Throughput::Bytes(bytes) => format!("{:.4} events/byte", value / *bytes as f64),
+            Throughput::BytesDecimal(bytes) => {
+                let event_per_byte = value / *bytes as f64;
+
+                let (denominator, unit) = if *bytes < 1000 {
+                    (1.0, "events/byte")
+                } else if *bytes < 1000 * 1000 {
+                    (1000.0, "events/kilobyte")
+                } else if *bytes < 1000 * 1000 * 1000 {
+                    (1000.0 * 1000.0, "events/megabyte")
+                } else {
+                    (1000.0 * 1000.0 * 1000.0, "events/gigabyte")
+                };
+
+                format!("{:.4} {}", event_per_byte / denominator, unit)
+            }
+            Throughput::Elements(bytes) => format!("{:.4} events/element", value / *bytes as f64),
         }
     }
 
@@ -145,15 +160,34 @@ impl ValueFormatter for PerfFormatter {
         values: &mut [f64],
     ) -> &'static str {
         match throughput {
-            Throughput::Bytes(n) => {
+            Throughput::Bytes(bytes) => {
                 for val in values {
-                    *val /= *n as f64;
+                    *val /= *bytes as f64;
                 }
                 "events/byte"
             }
-            Throughput::Elements(n) => {
+            Throughput::BytesDecimal(bytes) => {
+                let bytes_per_second = *bytes;
+                let (denominator, unit) = if bytes_per_second < 1000 {
+                    (1.0, "events/byte")
+                } else if bytes_per_second < 1000 * 1000 {
+                    (1000.0, "events/kilobyte")
+                } else if bytes_per_second < 1000 * 1000 * 1000 {
+                    (1000.0 * 1000.0, "events/megabyte")
+                } else {
+                    (1000.0 * 1000.0 * 1000.0, "events/gigabyte")
+                };
+
                 for val in values {
-                    *val /= *n as f64;
+                    *val /= *bytes as f64;
+                    *val /= denominator;
+                }
+
+                unit
+            }
+            Throughput::Elements(bytes) => {
+                for val in values {
+                    *val /= *bytes as f64;
                 }
                 "events/element"
             }
